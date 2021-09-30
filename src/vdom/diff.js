@@ -41,19 +41,28 @@ function addVnodes (parentElm, before, vnodes, startIdx, endIdx) {
             }
         }
     }    
+
+// 更新虚拟节点
 function patchVnode (oldVnode, vnode) {
-	const el = vnode.el = oldVnode.el
+    // 旧节点
+	const el = vnode.el = oldVnode.el // el === vnode.el === oldVnode.el 赋值运算符的结合性是从右往左
     let i, oldCh = oldVnode.children, ch = vnode.children
+    // 新旧节点完全相同，直接返回
     if (oldVnode === vnode) return
+    // 新旧节点只有文本有差异，直接替换
     if (oldVnode.text !== null && vnode.text !== null && oldVnode.text !== vnode.text) {
         api.setTextContent(el, vnode.text)
     }else {
+        // 将新的vdom的属性更新到新&旧节点el上
         updateEle(el, vnode, oldVnode)
+        // 若新旧节点均存在子节点，则更新子节点
     	if (oldCh && ch && oldCh !== ch) {
 	    	updateChildren(el, oldCh, ch)
 	    }else if (ch){
+            // 若新节点有子节点，旧节点无子节点，创建新节点
 	    	createEle(vnode) //create el's children dom
 	    }else if (oldCh){
+            // 旧节点有子节点，新节点无，移除旧节点
 	    	api.removeChildren(el)
 	    }
     }
@@ -129,9 +138,11 @@ function updateChildren (parentElm, oldCh, newCh) {
 }
 
 export function patch (oldVnode, vnode) {
+    // 相同的节点才进行更新
 	if (sameVnode(oldVnode, vnode)) {
 		patchVnode(oldVnode, vnode)
 	} else {
+        // key值不同的节点直接替换
 		const oEl = oldVnode.el
 		let parentEle = api.parentNode(oEl)
 		createEle(vnode)

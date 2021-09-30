@@ -73,6 +73,7 @@ export let api = Object.create(null)
 			}
 		}
 	}
+	// 循环删除子节点&子节点下的节点
 	api.removeChildren = function (ele) {
 		let i, ch = ele.childNodes
 		while(ch[0]) {
